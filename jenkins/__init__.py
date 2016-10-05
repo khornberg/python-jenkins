@@ -106,6 +106,7 @@ COPY_JOB = '%(from_folder_url)screateItem?name=%(to_short_name)s&mode=copy&from=
 RENAME_JOB = '%(from_folder_url)sjob/%(from_short_name)s/doRename?newName=%(to_short_name)s'
 BUILD_JOB = '%(folder_url)sjob/%(short_name)s/build'
 STOP_BUILD = '%(folder_url)sjob/%(short_name)s/%(number)s/stop'
+RETRY_BUILD = '%(folder_url)sjob/%(short_name)s/%(number)s/retry'
 BUILD_WITH_PARAMS_JOB = '%(folder_url)sjob/%(short_name)s/buildWithParameters'
 BUILD_INFO = '%(folder_url)sjob/%(short_name)s/%(number)d/api/json?depth=%(depth)s'
 BUILD_CONSOLE_OUTPUT = '%(folder_url)sjob/%(short_name)s/%(number)d/consoleText'
@@ -1108,6 +1109,16 @@ class Jenkins(object):
         folder_url, short_name = self._get_job_folder(name)
         self.jenkins_open(Request(
             self._build_url(STOP_BUILD, locals()), b''))
+
+    def retry_build(self, name, number):
+        '''Retry a running Jenkins build.
+
+        :param name: Name of Jenkins job, ``str``
+        :param number: Jenkins build number for the job, ``int``
+        '''
+        folder_url, short_name = self._get_job_folder(name)
+        self.jenkins_open(Request(
+            self._build_url(RETRY_BUILD, locals()), b''))
 
     def get_running_builds(self):
         '''Return list of running builds.
